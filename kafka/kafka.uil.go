@@ -7,14 +7,14 @@ import (
 	"os"
 )
 
-type KafkaConfig struct {
+type KafkaUtil struct {
 }
 
-func NewKafkaConfig() *KafkaConfig {
-	return &KafkaConfig{}
+func NewKafkaUtil() *KafkaUtil {
+	return &KafkaUtil{}
 }
 
-func (k *KafkaConfig) consume(topic string, consumer func(msg *kafka.Message)) {
+func (k *KafkaUtil) consume(topic string, consumer func(msg *kafka.Message)) {
 	c, err := kafka.NewConsumer(&kafka.ConfigMap{
 		"bootstrap.servers": os.Getenv(common.KafkaBootstrapServers),
 		"group.id":          os.Getenv(common.KafkaTestGroup),

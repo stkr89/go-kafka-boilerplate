@@ -6,13 +6,13 @@ import (
 )
 
 type KafkaConsumer struct {
-	kafkaConfig *KafkaConfig
+	kafkaUtil   *KafkaUtil
 	testService *test.TestService
 }
 
 func NewKafkaConsumer() *KafkaConsumer {
 	return &KafkaConsumer{
-		kafkaConfig: NewKafkaConfig(),
+		kafkaUtil:   NewKafkaUtil(),
 		testService: test.NewTestService(),
 	}
 }
@@ -23,6 +23,6 @@ func (kc *KafkaConsumer) InitConsumers() {
 	}
 
 	for k, v := range listenersMap {
-		kc.kafkaConfig.consume(k, v.Consume)
+		kc.kafkaUtil.consume(k, v.Consume)
 	}
 }
