@@ -14,12 +14,16 @@ func NewKafkaUtil() *KafkaUtil {
 	return &KafkaUtil{}
 }
 
-func (k *KafkaUtil) consume(topic string, consumer func(msg *kafka.Message)) {
-	c, err := kafka.NewConsumer(&kafka.ConfigMap{
+func getBaseKafkaConfig() *kafka.ConfigMap {
+	return &kafka.ConfigMap{
 		"bootstrap.servers": os.Getenv(common.KafkaBootstrapServers),
 		"group.id":          os.Getenv(common.KafkaTestGroup),
 		"auto.offset.reset": common.KafkaAutoOffsetReset,
-	})
+	}
+}
+
+func (k *KafkaUtil) consume(topic string, consumer func(msg *kafka.Message)) {
+	c, err := kafka.NewConsumer(getBaseKafkaConfig())
 	if err != nil {
 		panic(err)
 	}
