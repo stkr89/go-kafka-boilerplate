@@ -14,10 +14,10 @@ func NewKafkaConfig() *KafkaConfig {
 	return &KafkaConfig{}
 }
 
-func (k *KafkaConfig) consume(topic string, listener func(msg *kafka.Message)) {
+func (k *KafkaConfig) consume(topic string, consumer func(msg *kafka.Message)) {
 	c, err := kafka.NewConsumer(&kafka.ConfigMap{
 		"bootstrap.servers": os.Getenv(common.KafkaBootstrapServers),
-		"group.id":          os.Getenv(common.KafkaGroupSSEProactiveSupport),
+		"group.id":          os.Getenv(common.KafkaTestGroup),
 		"auto.offset.reset": common.KafkaAutoOffsetReset,
 	})
 	if err != nil {
@@ -34,7 +34,7 @@ func (k *KafkaConfig) consume(topic string, listener func(msg *kafka.Message)) {
 	for {
 		msg, err := c.ReadMessage(-1)
 		if err == nil {
-			listener(msg)
+			consumer(msg)
 		} else {
 			logrus.Errorf("Consume error: %v (%v)\n", err, msg)
 		}
