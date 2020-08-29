@@ -14,15 +14,11 @@ func NewKafkaUtil() *KafkaUtil {
 	return &KafkaUtil{}
 }
 
-func getBaseKafkaConfig() *kafka.ConfigMap {
-	return &kafka.ConfigMap{
-		"bootstrap.servers": os.Getenv(common.KafkaBootstrapServers),
-		"group.id":          os.Getenv(common.KafkaTestGroup),
-		"auto.offset.reset": common.KafkaAutoOffsetReset,
-	}
+func (ku *KafkaUtil) Produce(topic string, payload interface{}) {
+	panic("implement me")
 }
 
-func (k *KafkaUtil) consume(topic string, consumer func(msg *kafka.Message)) {
+func (ku *KafkaUtil) addConsumer(topic string, onConsume func(msg *kafka.Message)) {
 	c, err := kafka.NewConsumer(getBaseKafkaConfig())
 	if err != nil {
 		panic(err)
@@ -38,11 +34,19 @@ func (k *KafkaUtil) consume(topic string, consumer func(msg *kafka.Message)) {
 	for {
 		msg, err := c.ReadMessage(-1)
 		if err == nil {
-			consumer(msg)
+			onConsume(msg)
 		} else {
-			logrus.Errorf("Consume error: %v (%v)\n", err, msg)
+			logrus.Errorf("OnConsume error: %v (%v)\n", err, msg)
 		}
 	}
 
 	c.Close()
+}
+
+func getBaseKafkaConfig() *kafka.ConfigMap {
+	return &kafka.ConfigMap{
+		"bootstrap.servers": os.Getenv(common.KafkaBootstrapServers),
+		"group.id":          os.Getenv(common.KafkaTestGroup),
+		"auto.offset.reset": common.KafkaAutoOffsetReset,
+	}
 }

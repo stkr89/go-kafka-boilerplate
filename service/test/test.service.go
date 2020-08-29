@@ -9,6 +9,6 @@ func NewTestService() *TestService {
 	return &TestService{}
 }
 
-func (ps *TestService) Consume(msg *kafka.Message) {
+func (ps *TestService) OnConsume(msg *kafka.Message) {
 	panic("implement me")
 }

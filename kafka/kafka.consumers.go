@@ -23,6 +23,6 @@ func (kc *KafkaConsumer) InitConsumers() {
 	}
 
 	for k, v := range listenersMap {
-		kc.kafkaUtil.consume(k, v.Consume)
+		kc.kafkaUtil.addConsumer(k, v.OnConsume)
 	}
 }
